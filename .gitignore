@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+
+
+# Virtual environments
+venv/
+.env
+c
+# IDE
+.idea/
+*.iml
+
+# Logs / cache
+*.log
+*.tmp
+.cache/
+pytest_cache/
