@@ -14,6 +14,5 @@ class Orders(Base):
 
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
-
     def __str__(self):
         return f"{self.product_name} x{self.quantity} — {self.final_price} руб"
