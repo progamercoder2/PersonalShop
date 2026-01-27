@@ -16,3 +16,12 @@ def phone_button():
     builder.button(text='Отправьте Ваш номер телефона ☎️', request_contact=True)
     return builder.as_markup(resize_keyboard=True)
 
+def get_main_menu():
+    """формирование кнопок меню"""
+    builder = ReplyKeyboardBuilder()
+    builder.button(text="✅ Сделать заказ")
+    builder.button(text="📒 История")
+    builder.button(text="🛒 Корзина")
+    builder.button(text="⚙️ Настройки")
+    builder.adjust(1, 3)
+    return builder.as_markup(resize_keyboard=True)
