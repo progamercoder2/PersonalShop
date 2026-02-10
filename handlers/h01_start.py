@@ -40,5 +40,3 @@ async def register_user(message: Message):
         await show_main_menu(message)
     else:
         await message.answer(text="Предоставьте ваш номер телефона📞", reply_markup=phone_button())
-
-
