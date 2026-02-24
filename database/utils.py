@@ -44,3 +44,21 @@ def db_create_user_cart(chat_id):
         return False
     except AttributeError:
         return False
+
+
+def db_get_all_category():
+    """получение списка категорий"""
+    with get_session() as session:
+        query = select(Categories)
+        return session.scalars(query).all()
+
+
+def db_get_finally_price(chat_id):
+    """Получение итоговой cуммы"""
+
+    with get_session() as session:
+        query = select(func.sum(FinallyCarts.final_price)).select_from(
+            join(Carts, FinallyCarts, Carts.id == FinallyCarts.cart_id)).join(Users, Users.id == Carts.user_id).where(
+            Users.telegram == chat_id)
+        return session.execute(query).fetchone()[0]
+
