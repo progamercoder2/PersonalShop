@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import text, select
 from database.base import engine, Base
-from database.models import Categories, Products
+from database.models import Categories, Products, FinallyCarts, Users, Carts
 from database.models.orders import Orders
 
 
