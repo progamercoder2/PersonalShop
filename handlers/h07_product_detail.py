@@ -1,7 +1,7 @@
 from aiogram import Router, F, Bot
 from aiogram.types import CallbackQuery
 
-from database.utils import db_get_product_by_id
+from database.utils import db_get_product_by_id, db_get_user_cart
 
 router = Router()
 

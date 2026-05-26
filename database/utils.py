@@ -88,8 +88,30 @@ def db_get_product(category_id):
 
 def db_get_product_by_id(product_id):
     """"Получение продукта по id"""
-    pass
-
+    with get_session() as session:
+        query = select(Products).where(Products.id == product_id)
+        return session.scalars(query)
 
 def db_get_user_cart(chat_id):
-    pass
+    with get_session() as session:
+        query = (
+            select(Carts).
+            join(Users, Carts.user_id == Users.id).
+            where(Users.telegram == chat_id))
+        return session.scalar(query)
+
+def db_add_or_update_item(
+        cart_id: int,
+        product_id: int,
+        product_name: str,
+        product_price: DECIMAL,
+        increment: int = 0
+):
+    try:
+        with get_session() as session:
+            items=(
+                session.query(FinallyCarts)
+                .filter_by(carts_id=cart_id, product_id=product_id)
+                .first()
+            )
+            )
