@@ -92,6 +92,7 @@ def db_get_product_by_id(product_id):
         query = select(Products).where(Products.id == product_id)
         return session.scalars(query)
 
+
 def db_get_user_cart(chat_id):
     with get_session() as session:
         query = (
@@ -100,6 +101,7 @@ def db_get_user_cart(chat_id):
             where(Users.telegram == chat_id))
         return session.scalar(query)
 
+
 def db_add_or_update_item(
         cart_id: int,
         product_id: int,
@@ -107,11 +109,27 @@ def db_add_or_update_item(
         product_price: DECIMAL,
         increment: int = 0
 ):
+    """добавление или изменение количества товаров"""
     try:
         with get_session() as session:
-            items=(
+            item = (
                 session.query(FinallyCarts)
                 .filter_by(carts_id=cart_id, product_id=product_id)
                 .first()
             )
-            )
+            if item:
+                if increment != 0:
+                    item.quantity = max(1, item.quantity + increment)
+            else:
+                qty = 1 if increment <= 0 else increment
+                item = FinallyCarts(
+                    cart_id=cart_id,
+                    product_id=product_id,
+                    product_name=product_name,
+                    quantity=qty,
+                    final_price=0
+                )
+                session.add(item)
+
+            item.final_price = item.quantity * product_price
+
