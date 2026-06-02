@@ -8,7 +8,7 @@ router = Router()
 
 
 @router.callback_query(F.data.startswith('product_view_'))
-async def show_product_view_(callback: CallbackQuery, bot: Bot):
+async def show_product_view(callback: CallbackQuery, bot: Bot):
     """показ детальной информации о продукте"""
     chat_id = callback.message.chat.id
     message_id = callback.message.message_id
