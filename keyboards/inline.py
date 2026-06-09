@@ -31,3 +31,15 @@ def show_product_by_category(category_id: int):
         InlineKeyboardButton(text="⬅ Назад", callback_data='return_to_category')
     )
     return builder.as_markup()
+
+
+def quantity_cart_controls(quantity=1):
+    """изменение кол-ва товаров в корзине"""
+    builder = InlineKeyboardBuilder()
+    builder.button(text='➖', callback_data='action -')
+    builder.button(text=str(quantity), callback_data='quantity')
+    builder.button(text='➕', callback_data='action +')
+    builder.button(text='положить в корзину', callback_data='put_in_cart')
+    builder.button(text='◀️ Назад', callback_data='from_detail_to')
+    builder.adjust(3, 1, 1)
+    return builder.as_markup(resize_keyboard=True)
