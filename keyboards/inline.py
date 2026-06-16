@@ -40,6 +40,6 @@ def quantity_cart_controls(quantity=1):
     builder.button(text=str(quantity), callback_data='quantity')
     builder.button(text='➕', callback_data='action +')
     builder.button(text='положить в корзину', callback_data='put_in_cart')
-    builder.button(text='◀️ Назад', callback_data='from_detail_to')
+    builder.button(text='◀️ Назад', callback_data='from_detail_to_category')
     builder.adjust(3, 1, 1)
     return builder.as_markup(resize_keyboard=True)
