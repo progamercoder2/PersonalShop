@@ -71,4 +71,4 @@ async def handle_back_to_category(callback: CallbackQuery, bot: Bot):
 
     keyboard = generate_category_menu(chat_id)
     await bot.send_message(chat_id=chat_id,text="Выберите категорию", reply_markup=keyboard)
-    await callback.answer()
+    await callback.answer(р)
