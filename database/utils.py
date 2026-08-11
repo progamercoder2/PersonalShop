@@ -1,6 +1,6 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import update, delete, select, DECIMAL, join, func
+from sqlalchemy import update, select, DECIMAL, join, func
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 from database.base import engine
 from database.models import (Users, Categories, Products, Carts,
@@ -167,16 +167,17 @@ def db_get_product_by_name(product_name):
         query = select(Products).where(Products.product_name == product_name)
         return session.scalar(query)
 
+
 def db_get_cart_items(chat_id):
     """получение товара в финальной корзине"""
     with get_session() as session:
-        items=(session.query(FinallyCarts)
-               .join(Carts, FinallyCarts.cart_id == Carts.id)
-               .join(Users, Users.id == Carts.user_id)
-               .filter(Users.telegram == chat_id)
-               .all()
-               )
-        result=[]
+        items = (session.query(FinallyCarts)
+                 .join(Carts, FinallyCarts.cart_id == Carts.id)
+                 .join(Users, Users.id == Carts.user_id)
+                 .filter(Users.telegram == chat_id)
+                 .all()
+                 )
+        result = []
         for item in items:
             result.append({
                 'product_id': item.product_id,
@@ -186,14 +187,39 @@ def db_get_cart_items(chat_id):
             })
         return result
 
+
 def db_get_user_phone(chat_id):
     """Получение номера телефона"""
     with get_session() as session:
         query = select(Users.phone).where(Users.telegram == chat_id)
         return session.execute(query).fetchone()[0]
 
+
 def db_save_order_history(chat_id):
-    pass
+    """сохранение истории заказов"""
+    cart = db_get_user_cart(chat_id)
+    if not cart:
+        return
+    with get_session() as session:
+        final_items = session.query(FinallyCarts).filter_by(cart_id=cart.id).all()
+
+        for item in final_items:
+            session.add(
+                Orders(
+                    cart_id=cart.id,
+                    product_name=item.product_name,
+                    quantity=item.quantity,
+                    final_price=item.final_price
+                )
+            )
+        session.commit()
+
 
 def db_clean_final_cart(chat_id):
-    pass
+    """очистка корзины после покупки"""
+
+    cart = db_get_user_cart(chat_id)
+    if not cart:
+        return
+    with get_session() as session:
+        query = delete(FinallyCarts).where(FinallyCarts.carts_id == cart.id)
